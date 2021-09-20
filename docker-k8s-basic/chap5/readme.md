@@ -28,4 +28,21 @@ docker run --name wordpress000ex12 -dit --net=wordpress000net1 -p 8085:80 -e WOR
 ```
 MySQLに接続するために設定値はDBにて設定したものを設定する。
 
+## RedmineのコンテナとMariaDBのコンテナを作成する
+
+### ネットワークの作成
+```
+docker network create redmine000net3
+```
+
+### MariaDBコンテナの作成
+```
+docker run --name mariadb000ex15 -dit --net=redmine000net3 -e MYSQL_ROOT_PASSWORD=mariarootpass -e MYSQL_DATABASE=redmine000db -e MYSQL_USER=redmine000kun -e MYSQL_PASSWORD=rkunpass mariadb --character=set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-authentication-plugin=mysql_native_password
+```
+
+### Redmineコンテナの作成
+```
+docker run -dit --name redmine000ex16 --network redmine000net3 -p 8087:3000 -e REDMINE_DB_MYSQL=mariadb000ex15 -e REDMINE_DB_DATABASE=redmine000db -e REDMINE_DB_USERNAME=redmine000kun -e READMINE_DB_PASSWORD=rkunpass redmine
+```
+
 
