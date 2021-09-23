@@ -348,6 +348,9 @@ docker commit コンテナ名 作成するイメージ名
 6. 全部うまくいったら Dockerfile にする
 https://qiita.com/pottava/items/452bf80e334bc1fee69a#dockerfile-%E3%83%99%E3%82%B9%E3%83%88%E3%83%97%E3%83%A9%E3%82%AF%E3%83%86%E3%82%A3%E3%82%B9
 
+- FROMにはベースとするDocker Image を記述する
+→ CentOSとかAlpine Linuxとか、 弊社ではnodeが書いてあったりした
+
 ## コンテナの改造
 Dockerを使う場面では、自社で開発したシステムを載せることも多く
 公式が配布しているソフトウェアを改造したいこおtもある。
