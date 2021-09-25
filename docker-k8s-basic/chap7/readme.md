@@ -62,7 +62,7 @@ docker-compose -d 定義ファイルのパス [up,down,stop] オプション
 
 docker-compose.yamlのあるディレクトリにいって以下を実行
 ```
-docker-compose up -d
+docker-compose up -dxz
 ```
 
 **後始末**
