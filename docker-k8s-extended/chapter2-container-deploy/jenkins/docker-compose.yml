@@ -1,0 +1,19 @@
+version: "3"
+services:
+  master:
+    container_name: master
+    image: jenkins/jenkins:lts
+    ports:
+      - 8080:8080
+    volumes:
+      - ./jenkins_home:/var/jenkins_home
+    # MasterからSlaveを探すために使う、IPアドレスを用いなくてもよい
+    links:
+      - slave01
+
+  slave01:
+    container_name: slave01
+    image: jenkinsci/ssh-slave
+    environment:
+      # ./jenkins_home/.ssh/id_rsa.pub の中身
+      - JENKINS_SLAVE_SSH_PUBKEY=ssh-rsa ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC8QPcp5XJY4qk1f//Pexjv1S5jOnZ6V8O52RB932dzpyZG0qJbBmvVjv4evez4Gos9ETAumNTNktaEEAtkvU/+GrU1IkijcOCNADYrmHprVHydXgsyaSBtyant/ohh7rT01ymH26KuouGNKnNHz6JSO461tOdLGLVk10EslpcjNNAZyYeb88+kiTw4rj7EIPuz9g3qcXIrEzL4nUyKQIX2h8mbDn4LKrR202bXzq/B2/v8IapFn7MOV29mrdVe8siiCv8velg4fYKsqjQuewDISsLORi0WP1Sd/tGHaC2hhyNMJcgY2BWEPxnXIk6cT0VNb2aXT1zV7UUX17stv6rhE+AQ3Q/B7sYhFrl48joB2s5QyREr3kjuPNKRe7mdg7gLwz0I2K+2CqxLiC+Mm4viBVj24YUsheIHaVkUmM4fy0Fmzb6hWH/UNSzFPcQiLKLbReP1Mlbhug+mVzVzPJrkKsywDg26a07Rm3Xfv1T8lUq1hM6lPSSgzPDM2mZg31M=

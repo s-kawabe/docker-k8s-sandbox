@@ -1,0 +1,8 @@
+version: "3"
+services:
+  echo:
+    build: . # iamge: image名とすることもできるがDockerfileを用意している場合はこうする
+    ports:
+      - 9000:8080
+# docker container run --platform linux/arm64 -d example/echo:latest と同じ
+# 停止時はdocker-compose down
