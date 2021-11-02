@@ -174,3 +174,4 @@ The key's randomart image is:
 ### 続き
 
 `docker-compose up`すると master と slave01 が立ち上がる
+	
