@@ -1,0 +1,20 @@
+apiVersion: v1
+# k8sのリソースの種類を指定する
+kind: Pod
+# このリソースの名称として設定されるメタデータ
+metadata:
+  name: simple-echo
+spec:
+  containers:
+  - name: nginx
+    image: gihyodocker/nginx-proxy:latest
+    env:
+    - name: BACKEND_HOST
+      value: localhost:8080
+    # EXPOSEするポートを指定 
+    ports:
+    - containerPort: 80
+  - name: echo
+    image: gihyodocker/echo:latest
+    ports:
+    - containerPort: 8080

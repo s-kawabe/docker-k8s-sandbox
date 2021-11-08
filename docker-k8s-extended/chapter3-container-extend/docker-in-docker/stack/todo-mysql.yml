@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  master:
+    image: registry:5000/ch04/tododb2:latest
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role != manager]
+    environment:
+      MYSQL_ROOT_PASSWORD: gihyo
+      MYSQL_DATABASE: tododb
+      MYSQL_USER: gihyo
+      MYSQL_PASSWORD: gihyo
+      MYSQL_MASTER: "true"
+    networks:
+      - todoapp
+
+  slave:
+    image: registry:5000/ch04/tododb2:latest
+    deploy:
+      replicas: 2
+      placement:
+        constraints: [node.role != manager]
+    environment:
+      MYSQL_ROOT_PASSWORD: gihyo
+      MYSQL_DATABASE: tododb
+      MYSQL_USER: gihyo
+      MYSQL_PASSWORD: gihyo
+      MYSQL_MASTER: "true"
+    networks:
+      - todoapp
+
+# 各サービスをtodoapp networkに所属させる。
+networks:
+  todoapp:
+    external: true
