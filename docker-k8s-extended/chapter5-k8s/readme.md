@@ -454,6 +454,77 @@ IngressはServiceのKubernetesクラスタの外への公開と、VirtualHostや
 パスベースでの高度なHTTPルーティングを両立する。
 **HTTP/HTTPSのサービスを公開するユースケースではほぼIngressを使用することになる。**
 
+ingressはL7層のルーティングが可能なので、VirtualHostの仕組みのように指定した
+ホストやパスに合致したサービスにリクエストを委譲できる。
+
 クラスタの外からのHTTPリクエストをServiceにルーディングするためには`nginx_ingress_controller`
 をデプロイする必要がある。
 
+# Job
+Kubernetesは常駐型サーバーアプリケーション以外にも、ジョブサーバーなど多様な使い道がある。
+Jobは1つのPodを作成し、**指定された数のPodが正常に完了するまでを管理するリソース。**
+Jobによる全てのPodが正常に終了しても、Podは削除されずに保持されるため終了後にPodのログや実行結果を分析できる。
+常駐型アプリケーションよりも大規模な計算やバッチ志向のアプリケーションに向いている。
+JobはPodを複数並列で実行することで容易にスケールアウトできる。
+Podとして実行することでKubernetesのServiceと連携した処理を行いやすいという面もある。
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pingpong
+  labels:
+    app: pingpong
+spec:
+  parallelism: 3
+  template:
+    metadata:
+      labels:
+        app: pingpong
+    spec:
+      containers:
+      - name: pingpong
+        image: gihyodocker/alpine:bash
+        command: ["bin/sh"]
+        args:
+          - "-c"
+          - |
+            echo [`date`] ping!
+            sleep 10
+            echo [`date`] pong!
+        restartPolicy: Never
+```
+
+# Cronjob
+Jobは一度きりのPodの実行だが、CronJobリソースを利用するとスケジューリングして定期的にPodを実行できる。
+
+```yaml
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: pingpong
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: pingpong
+        spec:
+          containers:
+          - name: pingpong
+            image: gihyodocker/alpine:bash
+            command: ["/bin/sh"]
+            args:
+            - "-c"
+            - |
+            echo [`date`] ping!
+            sleep 10
+            echo [`date`] pong!
+        restartPolicy: OnFairure
+```
+
+spec.scheduleにCron記法でPosの起動スケジュールを定義できる。
+CronJobのマニフェストファイルを適用するとジョブが作成され、指定したCronの条件基づいた
+スケジュールでPosを作成する。

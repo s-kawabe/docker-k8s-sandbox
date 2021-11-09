@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Ingress
+metadata:
+  name: echo
+  # annotations: ここにnginx-ingress-controller独自の制御を記述できる
+  # ここでHTTPなどの制御ができるので転送先のバックエンドではこのようなフィルタリングを入れなくてもよくなる？
+spec:
+  rules:
+  - host: ch05.gihyo.local
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: echo
+          servicePort: 80
